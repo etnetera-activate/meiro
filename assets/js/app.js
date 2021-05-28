@@ -145,6 +145,21 @@ window.btoa = window.btoa || function () {
     this.reset();
   });
 
+  $("#wizardStep1").on("submit", function(event) {
+    var eventData;
+
+    event.preventDefault();
+
+    eventData = $(this).serializeObject();
+    eventData.userId = getUserId(eventData.email);
+    eventData.formId = "wizardStep1";
+    eventData.event = "formSent";
+
+    console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
+    window[window.dataLayerName].push(eventData);
+    this.reset();
+  });
+
   $("#contactForm").on("submit", function(event) {
     var eventData;
 
