@@ -240,14 +240,19 @@ window.btoa = window.btoa || function () {
         if (formId === "form") {
           stepName = "Success";
           emailFieldValue = $form.find("#email").val();
+          eventData = {
+            event: stepName,
+            formId: formId,
+            formStep: currentStep
+          };
         } else {
           stepName = "wizard" + ((nextStep === 3) ? "Success" : "Step" + nextStep) + "Loaded";
+          eventData = {
+            event: stepName,
+            formId: "wizard" + ((nextStep === 3) ? "Success" : "Step" + nextStep),
+            formStep: nextStep
+          };
         }
-        eventData = {
-          event: stepName,
-          formId: formId,
-          formStep: currentStep
-        };
         if (emailFieldValue) {
           eventData.userId = getUserId(emailFieldValue)
         }
