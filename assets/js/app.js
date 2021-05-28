@@ -157,7 +157,6 @@ window.btoa = window.btoa || function () {
 
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
     window[window.dataLayerName].push(eventData);
-    this.reset();
   });
 
   $("#contactForm").on("submit", function(event) {
