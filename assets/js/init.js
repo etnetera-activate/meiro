@@ -6,6 +6,8 @@
 },{}]},{},[1])(1)
 });
 
+console.log("Page Loaded with this Data Layer: " + JSON.stringify(window[window.dataLayerName], null, 2));
+
 // Get User ID
 function getUserId(username) {
   var userId;
