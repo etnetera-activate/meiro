@@ -246,9 +246,11 @@ window.btoa = window.btoa || function () {
         eventData = {
           event: stepName,
           formId: formId,
-          formStep: currentStep,
-          userId: getUserId(emailFieldValue || "N/A")
+          formStep: currentStep
         };
+        if (emailFieldValue) {
+          eventData.userId = getUserId(emailFieldValue)
+        }
 
         console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
         window[window.dataLayerName].push(eventData);  
