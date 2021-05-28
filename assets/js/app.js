@@ -150,6 +150,7 @@ window.btoa = window.btoa || function () {
     event.preventDefault();
 
     eventData = $(this).serializeObject();
+    eventData.userId = getUserId(eventData.contact);
     eventData.formId = "contactForm";
     eventData.event = "contactSent";
 
