@@ -218,7 +218,7 @@ window.btoa = window.btoa || function () {
           $nextStepTabLink,
           invalidFields,
           invalidFieldsMessage,
-          eventData,
+          eventData = {},
           formId,
           stepName,
           emailFieldValue;
