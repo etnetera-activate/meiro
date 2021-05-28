@@ -191,12 +191,6 @@ window.btoa = window.btoa || function () {
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
     window[window.dataLayerName].push(eventData);
 
-    event.preventDefault();
-
-    $target = $(event.target);
-    linkHref = $target.attr("href");
-    fileType = linkHref.split(".").pop().toUpperCase();
-
     setTimeout(function() {
       window.location = linkHref;
     }, 500);
@@ -226,7 +220,8 @@ window.btoa = window.btoa || function () {
           invalidFieldsMessage,
           eventData,
           formId,
-          stepName;
+          stepName,
+          emailFieldValue;
       
       event.preventDefault();
       event.stopPropagation();
@@ -244,12 +239,15 @@ window.btoa = window.btoa || function () {
 
         if (formId === "form") {
           stepName = "Success";
+          emailFieldValue = $form.find("#email").val();
         } else {
           stepName = "wizard" + ((nextStep === 3) ? "Success" : "Step" + nextStep) + "Loaded";
         }
         eventData = {
           event: stepName,
-          formId: formId
+          formId: formId,
+          formStep: currentStep,
+          userId: getUserId(emailFieldValue || "N/A")
         };
 
         console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
