@@ -218,18 +218,23 @@ window.btoa = window.btoa || function () {
   var validation = Array.prototype.filter.call(forms, function(form) {
     form.addEventListener("submit", function(event) {
       var currentStep,
+          $form,
           $currentStepTabLink,
           nextStep,
           $nextStepTabLink,
           invalidFields,
           invalidFieldsMessage,
-          eventData;
+          eventData,
+          formId,
+          stepName;
       
       event.preventDefault();
       event.stopPropagation();
 
       if (form.checkValidity() === true) {
-        currentStep = parseInt($(form).find(".form-step").val());
+        $form = $(form);
+        formId = $form.attr("id");
+        currentStep = parseInt($form.find(".form-step").val()) || 1;
         $currentStepTabLink = $("#step" + currentStep + "tab a");
         nextStep = currentStep + 1;
         $nextStepTabLink = $("#step" + nextStep + "tab a");
@@ -237,8 +242,14 @@ window.btoa = window.btoa || function () {
         $currentStepTabLink.addClass("disabled");
         $nextStepTabLink.tab("show");
 
+        if (formId === "form") {
+          stepName = "Success";
+        } else {
+          stepName = "wizard" + ((nextStep === 3) ? "Success" : "Step" + nextStep) + "Loaded";
+        }
         eventData = {
-          event: "wizard" + ((nextStep === 3) ? "Success" : "Step" + nextStep) + "Loaded"
+          event: stepName,
+          formId: formId
         };
 
         console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
