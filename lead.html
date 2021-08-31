@@ -150,27 +150,31 @@
 				<!-- Start mailkit inline html. You can modify labels and add classes but make sure that the field names, ids stay the same -->
 ​
 				<div id="mailkit_instance_inline_91546" class="mailkit_instance mailkit_inline">
-					<form method="POST" data-id="ejb46550b">
-					<div class="mailkit_email">
-						<label for="email_inline">E-mail</label>
-						<input type="text" name="email" id="email_inline" value="" class="required">
-					</div>
-					<div>
-						<label for="first_name_inline">Křestní jméno</label>
-						<input type="text" name="first_name" id="first_name_inline" value="" class="required">
-					</div>
-					<div>
-						<label for="last_name_inline">Příjmení</label>
-						<input type="text" name="last_name" id="last_name_inline" value="">
-					</div>
-					<div>
-						<label for="mobile_inline">Telefon</label>
-						<input type="text" name="mobile" id="mobile_inline" value="">
-					</div>
-					<input type="hidden" name="custom_field_1" id="custom_field_1_inline" value="test">
-					<div class="mailkit_submit">
-						<button type="submit">Přihlásit</button>
-					</div>
+					<form id="leadForm" method="POST" data-id="ejb46550b">
+						<div class="form-group" id="contact-group">
+							<div> <!-- class="mailkit_email" -->
+								<label class="control-label" for="email_inline">E-mail</label>
+								<input class="form-control" type="text" name="email" id="email_inline" value="" class="required">
+							</div>
+							<div>
+								<label class="control-label" for="first_name_inline">Křestní jméno</label>
+								<input class="form-control" type="text" name="first_name" id="first_name_inline" value="" class="required">
+							</div>
+							<div>
+								<label class="control-label" for="last_name_inline">Příjmení</label>
+								<input class="form-control" type="text" name="last_name" id="last_name_inline" value="">
+							</div>
+							<div>
+								<label class="control-label" for="mobile_inline">Telefon</label>
+								<input class="form-control" type="text" name="mobile" id="mobile_inline" value="">
+							</div>
+							<input type="hidden" name="custom_field_1" id="custom_field_1_inline" value="test">
+						</div>
+						<div class="form-group">
+							<div class="mailkit_submit">
+								<button class="btn btn-primary" type="submit">Přihlásit</button>
+							</div>
+						</div>
 					</form>
 				</div>
 				<!-- end mailkit inline html. -->
