@@ -138,6 +138,7 @@ window.btoa = window.btoa || function () {
     eventData = $(this).serializeObject();
     eventData.userId = getUserId(eventData.contact);
     eventData.formId = "leadForm";
+    eventData.leadId = generatePushID();
     eventData.event = "leadSent";
 
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
