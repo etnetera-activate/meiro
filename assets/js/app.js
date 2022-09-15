@@ -152,7 +152,7 @@ window.btoa = window.btoa || function () {
     event.preventDefault();
 
     eventData = $(this).serializeObject();
-    eventData.userId = getUserId(eventData.email);
+    //eventData.userId = getUserId(eventData.email);
     eventData.formId = "wizardStep1";
     eventData.event = "formSent";
 
