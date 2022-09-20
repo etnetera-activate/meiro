@@ -250,7 +250,7 @@ window.btoa = window.btoa || function () {
           eventData = {
             event: stepName,
             formId: "Wizard",
-            formStep: ((nextStep === 3) ? "success" : nextStep)
+            formStep: ((nextStep === 3) ? "success" : "" + nextStep)
           };
         }
         if (emailFieldValue) {
