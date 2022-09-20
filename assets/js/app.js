@@ -167,8 +167,8 @@ window.btoa = window.btoa || function () {
 
     eventData = $(this).serializeObject();
     eventData.userId = getUserId(eventData.contact);
-    eventData.formId = "contactForm";
-    eventData.event = "contactSent";
+    eventData.formId = "Contact";
+    eventData.event = "formSent";
 
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
     window[window.dataLayerName].push(eventData);
@@ -239,12 +239,11 @@ window.btoa = window.btoa || function () {
         $nextStepTabLink.tab("show");
 
         if (formId === "form") {
-          stepName = "Success";
           emailFieldValue = $form.find("#email").val();
           eventData = {
-            event: stepName,
-            formId: formId,
-            formStep: currentStep
+            event: "formSent",
+            formId: "Form",
+            formStep: "success"
           };
         } else {
           stepName = "wizard" + ((nextStep === 3) ? "Success" : "Step" + nextStep) + "Loaded";
