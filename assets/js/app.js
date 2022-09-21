@@ -229,8 +229,8 @@ window.btoa = window.btoa || function () {
 
       if (form.checkValidity() === true) {
         $form = $(form);
-        formId = $form.attr("id");
-        currentStep = parseInt($form.find(".form-step").val()) || 1;
+        formId = $form.find("#formStep");
+        currentStep = parseInt($form.find("#formStep").val()) || 1;
         $currentStepTabLink = $("#step" + currentStep + "tab a");
         nextStep = currentStep + 1;
         $nextStepTabLink = $("#step" + nextStep + "tab a");
