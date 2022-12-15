@@ -136,8 +136,25 @@ window.btoa = window.btoa || function () {
     event.preventDefault();
 
     eventData = $(this).serializeObject();
-    eventData.userId = getUserId(eventData.contact);
-    eventData.formId = "leadForm";
+    eventData.applicationContext = {
+      application: "NDBIB",
+      environment: "DEV",
+      version: "0.9.0",
+      skin: "light",
+    };
+    eventData.pageContext = {
+      page: "Lead",
+    };
+    eventData.productContext = {
+      productId: "Product_3",
+    };
+    eventData.journeyContext = {
+      journey: "Lead",
+      journeyStep: "Lead_sent",
+    };
+    eventData.customerContext = {
+      userId: getUserId(eventData.contact)
+    };
     eventData.leadId = generatePushID();
     eventData.event = "leadSent";
 

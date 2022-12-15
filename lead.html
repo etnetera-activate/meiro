@@ -43,6 +43,7 @@
 	<!-- Mailkit-->
   <!-- 
 	<script>
+
 		var e = {
 		  type: "double",
 		  dml: "91546",
@@ -68,9 +69,22 @@
       window.dataLayerName = 'dataLayer';
       dataLayer.push({
         event: "pageData",
-        pageType: "product",
-        product: "Product 3",
-        formId: "Lead"
+        applicationContext: {
+          application: "NDBIB",
+          environment: "DEV",
+          version: "0.9.0",
+          skin: "light",
+        },
+        pageContext: {
+          page: "Lead",
+        },
+        productContext: {
+          productId: "Product_3",
+        },
+        journeyContext: {
+          journey: "Lead",
+          journeyStep: "Basic_info",
+        }
       });
     </script>
     <script src="/assets/js/init.js"></script>
