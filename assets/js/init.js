@@ -1,3 +1,6 @@
+var dataLayer = dataLayer || [];
+window.dataLayerName = 'dataLayer';
+
 /* Copyright (c) 2010-2016 Marcus Westin */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.store = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (global){
@@ -6,23 +9,27 @@
 },{}]},{},[1])(1)
 });
 
-console.log("Page Loaded with this Data Layer: " + JSON.stringify(window[window.dataLayerName], null, 2));
-
 // Get User ID
 function getUserId(username) {
-  var userId;
+  var hashedId;
 
-  userId = "";
+  hashedId = "";
   for (var i = 0; i < 10; i++) {
-    userId += username;
+    hashedId += username.replace(/\s/g, ''); // remove whitespace
   }
-  return btoa(userId).substring(5, 15);
+  return btoa(hashedId).substring(5, 15);
 }
 
 // Determine Logged In User
 var loggedInUser = store.get("loggedInUser");
 if (typeof loggedInUser !== "undefined") {
-  window[window.dataLayerName].push({event: "userData", userId: getUserId(loggedInUser)});
+  window[window.dataLayerName].push({
+    event: "userIdentified",
+    identityContext: {
+      identity: getUserId(loggedInUser),
+      identitySchema: "KBID"
+    }
+  });
 }
 
 /**
@@ -35,7 +42,7 @@ if (typeof loggedInUser !== "undefined") {
  *    latter ones will sort after the former ones.  We do this by using the previous random bits
  *    but "incrementing" them by 1 (only in the case of a timestamp collision).
  */
-generatePushID = (function() {
+var generatePushID = (function() {
   // Modeled after base64 web-safe chars, but ordered by ASCII.
   var PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
 

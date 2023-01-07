@@ -210,7 +210,7 @@ $('#form').bootstrapValidator({
     eventData.event = 'validationFailed';
     
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
-    window[window.dataLayerName].push(eventData);
+    dataLayer.push(eventData);
 
     eventData.errors = [];
   })
@@ -220,7 +220,7 @@ $('#form').bootstrapValidator({
     eventData.event = 'formSent';
 
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
-    window[window.dataLayerName].push(eventData);
+    dataLayer.push(eventData);
 
     eventData.errors = [];
   });

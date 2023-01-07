@@ -115,17 +115,24 @@ window.btoa = window.btoa || function () {
     store.set("loggedInUser", eventData.username);
     login(eventData.username);
     delete eventData.password;
-    eventData.userId = getUserId(eventData.username);
+    eventData.identityContext = {
+      identity: getUserId(eventData.username),
+      identitySchema: "KBID"
+    };
     delete eventData.username;
-    eventData.formId = "loginForm";
+    eventData.windowFlowContext = {
+      windowFlow: "Login",
+      step: "Uspesne prihlaseni"
+    };
     eventData.event = "login";
 
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
     window[window.dataLayerName].push(eventData);
+    document.location = "/dashboard.html";
     this.reset();
   });
 
-  var leadId = $('#leadId');
+  var leadId = $("#leadId");
   if (leadId) {
     leadId.val(generatePushID());
   }
@@ -136,45 +143,25 @@ window.btoa = window.btoa || function () {
     event.preventDefault();
 
     eventData = $(this).serializeObject();
-    eventData.applicationContext = {
-      application: "NDBIB",
-      environment: "DEV",
-      version: "0.9.0",
-      skin: "light",
+    eventData.identityContext = {
+      identity: getUserId(eventData.contact),
+      identitySchema: "KBID"
     };
-    eventData.pageContext = {
-      page: "Lead",
+    delete eventData.username;
+    eventData.windowFlowContext = {
+      windowFlow: "Lead",
+      step: "Uspesne odeslani"
     };
     eventData.productContext = {
-      productId: "Product_3",
-    };
-    eventData.journeyContext = {
-      journey: "Lead",
-      journeyStep: "Lead_sent",
-    };
-    eventData.customerContext = {
-      userId: getUserId(eventData.contact)
+      productId: "Bezny ucet",
     };
     eventData.leadId = generatePushID();
     eventData.event = "leadSent";
 
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
     window[window.dataLayerName].push(eventData);
+    $("#alerts").html("<div class=\"alert alert-success\" role=\"alert\">Lead sent!</div>")
     this.reset();
-  });
-
-  $("#wizardStep1").on("submit", function(event) {
-    var eventData;
-
-    event.preventDefault();
-
-    eventData = $(this).serializeObject();
-    //eventData.userId = getUserId(eventData.email);
-    eventData.formId = "Wizard";
-    eventData.event = "formSent";
-
-    console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
-    window[window.dataLayerName].push(eventData);
   });
 
   $("#contactForm").on("submit", function(event) {
@@ -183,9 +170,10 @@ window.btoa = window.btoa || function () {
     event.preventDefault();
 
     eventData = $(this).serializeObject();
-    eventData.userId = getUserId(eventData.contact);
-    eventData.formId = "Contact";
-    eventData.event = "formSent";
+    eventData.windowFlowContext = {
+      windowFlow: "Contact"
+    };
+    eventData.event = "contactSent";
 
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
     window[window.dataLayerName].push(eventData);
@@ -204,10 +192,22 @@ window.btoa = window.btoa || function () {
     linkHref = $target.attr("href");
     fileType = linkHref.split(".").pop().toUpperCase();
 
-    eventData = {event: "fileDownload", fileName: linkHref, fileType: fileType}
+    eventData = {
+      event: "fileDownload",
+      fileContext: {
+        name: linkHref,
+        type: fileType
+      }
+    };
 
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
     window[window.dataLayerName].push(eventData);
+
+    event.preventDefault();
+
+    $target = $(event.target);
+    linkHref = $target.attr("href");
+    fileType = linkHref.split(".").pop().toUpperCase();
 
     setTimeout(function() {
       window.location = linkHref;
@@ -229,61 +229,84 @@ window.btoa = window.btoa || function () {
   // Loop over them and prevent submission
   var validation = Array.prototype.filter.call(forms, function(form) {
     form.addEventListener("submit", function(event) {
-      var currentStep,
-          $form,
+      var $form,
+          formId,
+          applicationId,
+          loggedInUser,
           $currentStepTabLink,
-          nextStep,
           $nextStepTabLink,
           invalidFields,
           invalidFieldsMessage,
-          eventData = {},
-          formId,
-          stepName,
-          emailFieldValue;
+          eventData;
       
       event.preventDefault();
       event.stopPropagation();
 
+      $form = $(form);
+      formId = $form.attr('id');
+
       if (form.checkValidity() === true) {
-        $form = $(form);
-        formId = $form.find("[data-track=formId]");
-        currentStep = parseInt($form.find("[data-track=formStep]").val()) || 1;
-        $currentStepTabLink = $("#step" + currentStep + "tab a");
-        nextStep = currentStep + 1;
-        $nextStepTabLink = $("#step" + nextStep + "tab a");
+        applicationId = store.get("applicationId");
+        if (applicationId === null && $form.data("current-step") === "#step1") {
+          applicationId = generatePushID();
+          store.set("applicationId", applicationId);
+          console.log("Storing applicationId '" + applicationId + "' to localStorage.");
+        }
+        $currentStepTabLink = $($form.data("current-step") + "tab a");
+        $nextStepTabLink = $($form.data("next-step") + "tab a");
         $nextStepTabLink.removeClass("disabled");
         $currentStepTabLink.addClass("disabled");
         $nextStepTabLink.tab("show");
 
-        if (formId === "form") {
-          emailFieldValue = $form.find("#email").val();
-          eventData = {
-            event: "formSent",
-            formId: "Form",
-            formStep: "success"
+        eventData = {
+          event: formId + "Submit",
+          windowFlowContext: {
+            windowFlow: formId,
+            step: $form.data("current-step")
+          },
+          productContext: {
+            productId: "Bezny ucet"
+          }
+        };
+
+        if ($form.data("next-step") === "#success") {
+          loggedInUser = store.get("loggedInUser");
+          if (typeof loggedInUser === "undefined") {
+            loggedInUser = $("#username").val();
+            store.set("loggedInUser", loggedInUser);
+          }
+          eventData.identityContext = {
+            identity: getUserId(loggedInUser),
+            identitySchema: "KBID"
           };
-        } else {
-          stepName = "wizard" + ((nextStep === 3) ? "Success" : "Step" + nextStep) + "Loaded";
-          eventData = {
-            event: stepName,
-            formId: "Wizard",
-            formStep: ((nextStep === 3) ? "success" : "" + nextStep)
-          };
-        }
-        if (emailFieldValue) {
-          eventData.userId = getUserId(emailFieldValue)
+          console.log("Removing applicationId '" + applicationId + "' from localStorage.");
+          localStorage.removeItem("applicationId");
         }
 
         console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
-        window[window.dataLayerName].push(eventData);  
+        window[window.dataLayerName].push(eventData);
+        
+        eventData = {
+          event: "windowFlowStep",
+          windowFlowContext: {
+            windowFlow: $form.find('input[name=windowFlow]').val(),
+            step: $form.data("next-step")
+          },
+          productContext: {
+            productId: "Bezny ucet"
+          }
+        };
+        
+        console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
+        window[window.dataLayerName].push(eventData);
+
       } else {
         invalidFields = $(event.target).find(":invalid");
   
         invalidFieldsMessage = invalidFields.toArray().filter(function(field) {
           return field.id !== "";
         }).map(function (field) {
-          var errorMessage,
-              eventData;
+          var errorMessage;
 
           if (field.validity.valueMissing) {
             errorMessage = "empty";
@@ -321,8 +344,11 @@ window.btoa = window.btoa || function () {
     $target = $(event.target);
     eventData = {
       event: "inputChange",
-      fieldName: $("label[for=" + $target.attr("id") + "]").text(),
-      fieldValue: $target.val()
+      componentContext: {
+        componentType: "input",
+        fieldName: $target.attr("id"),
+        fieldValue: $target.val()
+      }
     };
 
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
@@ -334,7 +360,10 @@ window.btoa = window.btoa || function () {
 
     eventData = {
       event: "contentShown",
-      contentTitle: $(e.target).text().trim()
+      componentContext: {
+        componentType: "tabbedContent",
+        contentTitle: $(e.target).text().trim()
+      }
     };
     
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
@@ -346,7 +375,10 @@ window.btoa = window.btoa || function () {
 
     eventData = {
       event: "contentShown",
-      contentTitle: $($(e.target).data("title")).text().trim()
+      componentContext: {
+        componentType: "collapsibleContent",
+        contentTitle: $($(e.target).data("title")).text().trim()
+      }
     };
     
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
