@@ -7,7 +7,7 @@ if (applicationId === null) {
   applicationId = generatePushID();
   localStorage.setItem("applicationId", applicationId);
 }
-dataLayer.push({ event: "pageView", pageContext: {techName: "Zalozeni uctu"} });
+dataLayer.push({ event: event: "view.screen", screenContext: {techName: "Zalozeni uctu"} });
 dataLayer.push({ event: "windowFlowStep", productContext: { productId: "Bezny ucet"}, windowFlowContext: {windowFlow: "Zalozeni BU", step: "Popis produktu"}, applicationId: applicationId });</script><!-- Google Tag Manager--><script>(function (w, d, s, l, i) {
   w[l] = w[l] || [];
   w[l].push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
