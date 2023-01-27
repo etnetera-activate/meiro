@@ -156,7 +156,7 @@ window.btoa = window.btoa || function () {
       productId: "Bezny ucet",
     };
     eventData.leadId = generatePushID();
-    eventData.event = "leadSent";
+    eventData.event = "send.lead";
 
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
     window[window.dataLayerName].push(eventData);
@@ -173,7 +173,7 @@ window.btoa = window.btoa || function () {
     eventData.windowFlowContext = {
       windowFlow: "Contact"
     };
-    eventData.event = "contactSent";
+    eventData.event = "send.contact";
 
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
     window[window.dataLayerName].push(eventData);
@@ -193,7 +193,7 @@ window.btoa = window.btoa || function () {
     fileType = linkHref.split(".").pop().toUpperCase();
 
     eventData = {
-      event: "fileDownload",
+      event: "download.file",
       fileContext: {
         name: linkHref,
         type: fileType
