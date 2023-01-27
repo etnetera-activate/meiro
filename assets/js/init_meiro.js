@@ -16,6 +16,6 @@ var dataLayer = dataLayer || [];
 
   loadScriptAsync(dataLayer.digitalAnalyticsLibrary);
   loadScriptAsync("https://" + dataLayer.meiroEventsDomain + "/sdk/", function () {
-    dataLayer.push({ event: "meiro_loaded" });
+    dataLayer.push({ event: "load.meiro" });
   });
 })();

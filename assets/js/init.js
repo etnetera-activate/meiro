@@ -24,10 +24,12 @@ function getUserId(username) {
 var loggedInUser = store.get("loggedInUser");
 if (typeof loggedInUser !== "undefined") {
   window[window.dataLayerName].push({
-    event: "userIdentified",
+    event: "login.customer",
     identityContext: {
-      identity: getUserId(loggedInUser),
-      identitySchema: "KBID"
+      identities: [{
+        identity: getUserId(loggedInUser),
+        identitySchema: "KBID"
+      }]
     }
   });
 }

@@ -207,7 +207,7 @@ $('#form').bootstrapValidator({
   .on('error.form.bv', function(event) {
     event.preventDefault();
     
-    eventData.event = 'validationFailed';
+    eventData.event = 'notify.ValidationFailure';
     
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
     dataLayer.push(eventData);
@@ -217,7 +217,7 @@ $('#form').bootstrapValidator({
   .on('success.form.bv', function(event) {
     event.preventDefault();
     
-    eventData.event = 'formSent';
+    eventData.event = 'send.form';
 
     console.log("Pushing to Data Layer: " + JSON.stringify(eventData, null, 2));
     dataLayer.push(eventData);

@@ -276,8 +276,10 @@ window.btoa = window.btoa || function () {
             store.set("loggedInUser", loggedInUser);
           }
           eventData.identityContext = {
-            identity: getUserId(loggedInUser),
-            identitySchema: "KBID"
+            identities: [{
+              identity: getUserId(loggedInUser),
+              identitySchema: "KBID"
+            }]
           };
           console.log("Removing applicationId '" + applicationId + "' from localStorage.");
           localStorage.removeItem("applicationId");
@@ -287,9 +289,9 @@ window.btoa = window.btoa || function () {
         window[window.dataLayerName].push(eventData);
         
         eventData = {
-          event: "windowFlowStep",
+          event: "windowFlow.stepLoaded",
           windowFlowContext: {
-            windowFlow: $form.find('input[name=windowFlow]').val(),
+            windowFlowId: $form.find('input[name=windowFlow]').val(),
             step: $form.data("next-step")
           },
           productContext: {
@@ -326,7 +328,7 @@ window.btoa = window.btoa || function () {
           return field.id + ":" + errorMessage;
         });
         eventData = {
-          event: "failedValidation",
+          event: "notify.validationFailure",
           invalidFields: invalidFieldsMessage
         };
 
@@ -343,7 +345,7 @@ window.btoa = window.btoa || function () {
 
     $target = $(event.target);
     eventData = {
-      event: "inputChange",
+      event: "update.component",
       componentContext: {
         componentType: "input",
         fieldName: $target.attr("id"),
@@ -359,7 +361,7 @@ window.btoa = window.btoa || function () {
     var eventData;
 
     eventData = {
-      event: "contentShown",
+      event: "show.component",
       componentContext: {
         componentType: "tabbedContent",
         contentTitle: $(e.target).text().trim()
@@ -374,7 +376,7 @@ window.btoa = window.btoa || function () {
     var eventData;
 
     eventData = {
-      event: "contentShown",
+      event: "show.component",
       componentContext: {
         componentType: "collapsibleContent",
         contentTitle: $($(e.target).data("title")).text().trim()
